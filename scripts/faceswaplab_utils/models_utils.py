@@ -1,11 +1,17 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import glob
 import os
 from typing import List
 import modules.scripts as scripts
 from modules import scripts
-from scripts.faceswaplab_globals import EXPECTED_INSWAPPER_SHA1, EXTENSION_PATH
+from faceswaplab_globals import EXPECTED_INSWAPPER_SHA1, EXTENSION_PATH
 from modules.shared import opts
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_utils.faceswaplab_logging import logger
 import traceback
 import hashlib
 

@@ -1,14 +1,20 @@
-from scripts.faceswaplab_inpainting.faceswaplab_inpainting import InpaintingOptions
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from faceswaplab_inpainting.faceswaplab_inpainting import InpaintingOptions
+from faceswaplab_utils.faceswaplab_logging import logger
 from PIL import Image
 from modules import shared
-from scripts.faceswaplab_utils import imgutils
+from faceswaplab_utils import imgutils
 from modules import shared, processing
 from modules.processing import StableDiffusionProcessingImg2Img
 from modules import sd_models
 import traceback
-from scripts.faceswaplab_swapping import swapper
-from scripts.faceswaplab_utils.typing import *
+from faceswaplab_swapping import swapper
+from faceswaplab_utils.typing import *
 from typing import *
 
 

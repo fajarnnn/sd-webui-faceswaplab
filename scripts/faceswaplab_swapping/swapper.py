@@ -1,3 +1,9 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import copy
 import os
 from dataclasses import dataclass
@@ -18,26 +24,26 @@ from insightface.app.common import Face as ISFace
 from PIL import Image
 from sklearn.metrics.pairwise import cosine_similarity
 
-from scripts.faceswaplab_swapping import upscaled_inswapper
-from scripts.faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
-from scripts.faceswaplab_utils.imgutils import (
+from faceswaplab_swapping import upscaled_inswapper
+from faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
+from faceswaplab_utils.imgutils import (
     pil_to_cv2,
     check_against_nsfw,
 )
-from scripts.faceswaplab_utils.faceswaplab_logging import logger, save_img_debug
+from faceswaplab_utils.faceswaplab_logging import logger, save_img_debug
 from scripts import faceswaplab_globals
 from functools import lru_cache
-from scripts.faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
-from scripts.faceswaplab_postprocessing.postprocessing import enhance_image
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+from faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
+from faceswaplab_postprocessing.postprocessing import enhance_image
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
-from scripts.faceswaplab_utils.models_utils import get_current_swap_model
-from scripts.faceswaplab_utils.typing import CV2ImgU8, Gender, PILImage, Face
-from scripts.faceswaplab_inpainting.i2i_pp import img2img_diffusion
+from faceswaplab_utils.models_utils import get_current_swap_model
+from faceswaplab_utils.typing import CV2ImgU8, Gender, PILImage, Face
+from faceswaplab_inpainting.i2i_pp import img2img_diffusion
 from modules import shared
 import onnxruntime
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
+from faceswaplab_utils.sd_utils import get_sd_option
 
 
 def use_gpu() -> bool:
@@ -51,7 +57,7 @@ def use_gpu() -> bool:
 def force_install_gpu_providers() -> None:
     # Ugly Ugly hack due to SDNEXT :
     try:
-        from scripts.faceswaplab_utils.install_utils import check_install
+        from faceswaplab_utils.install_utils import check_install
 
         logger.warning("Try to reinstall gpu dependencies")
         check_install()

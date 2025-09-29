@@ -1,11 +1,17 @@
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_utils.faceswaplab_logging import logger
 from PIL import Image
 import numpy as np
 from modules import codeformer_model
-from scripts.faceswaplab_utils.typing import *
+from faceswaplab_utils.typing import *
 
 
 def upscale_img(image: PILImage, pp_options: PostProcessingOptions) -> PILImage:

@@ -1,25 +1,31 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import traceback
 from pprint import pformat
 from typing import *
-from scripts.faceswaplab_swapping import face_checkpoints
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
-from scripts.faceswaplab_utils.typing import *
+from faceswaplab_swapping import face_checkpoints
+from faceswaplab_utils.sd_utils import get_sd_option
+from faceswaplab_utils.typing import *
 import gradio as gr
 import onnx
 import pandas as pd
 from PIL import Image
 
-import scripts.faceswaplab_swapping.swapper as swapper
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+import faceswaplab_swapping.swapper as swapper
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
-from scripts.faceswaplab_ui.faceswaplab_postprocessing_ui import postprocessing_ui
-from scripts.faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
-from scripts.faceswaplab_ui.faceswaplab_unit_ui import faceswap_unit_ui
-from scripts.faceswaplab_utils import imgutils
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
-from scripts.faceswaplab_utils.models_utils import get_swap_models
-from scripts.faceswaplab_utils.ui_utils import dataclasses_from_flat_list
+from faceswaplab_ui.faceswaplab_postprocessing_ui import postprocessing_ui
+from faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
+from faceswaplab_ui.faceswaplab_unit_ui import faceswap_unit_ui
+from faceswaplab_utils import imgutils
+from faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_utils.models_utils import get_swap_models
+from faceswaplab_utils.ui_utils import dataclasses_from_flat_list
 
 
 def compare(img1: PILImage, img2: PILImage) -> str:

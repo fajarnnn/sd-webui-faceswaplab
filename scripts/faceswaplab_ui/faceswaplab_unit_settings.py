@@ -1,4 +1,10 @@
-from scripts.faceswaplab_swapping import swapper
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from faceswaplab_swapping import swapper
 import base64
 import io
 from dataclasses import dataclass
@@ -6,11 +12,11 @@ from typing import List, Optional, Set, Union
 import gradio as gr
 from insightface.app.common import Face
 from PIL import Image
-from scripts.faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
-from scripts.faceswaplab_utils.imgutils import pil_to_cv2
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
-from scripts.faceswaplab_swapping import face_checkpoints
-from scripts.faceswaplab_inpainting.faceswaplab_inpainting import InpaintingOptions
+from faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
+from faceswaplab_utils.imgutils import pil_to_cv2
+from faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_swapping import face_checkpoints
+from faceswaplab_inpainting.faceswaplab_inpainting import InpaintingOptions
 from client_api import api_utils
 
 

@@ -1,3 +1,9 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import tempfile
 from PIL import Image
 import numpy as np
@@ -6,22 +12,22 @@ from modules.api import api
 from client_api.api_utils import (
     FaceSwapResponse,
 )
-from scripts.faceswaplab_globals import VERSION_FLAG
+from faceswaplab_globals import VERSION_FLAG
 import gradio as gr
 from typing import Dict, List, Optional, Union
-from scripts.faceswaplab_swapping import swapper
-from scripts.faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
-from scripts.faceswaplab_utils.imgutils import (
+from faceswaplab_swapping import swapper
+from faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
+from faceswaplab_utils.imgutils import (
     base64_to_pil,
 )
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
 from client_api import api_utils
-from scripts.faceswaplab_swapping.face_checkpoints import (
+from faceswaplab_swapping.face_checkpoints import (
     build_face_checkpoint_and_save,
 )
-from scripts.faceswaplab_utils.typing import PILImage
+from faceswaplab_utils.typing import PILImage
 
 
 def encode_to_base64(image: Union[str, Image.Image, np.ndarray]) -> str:  # type: ignore

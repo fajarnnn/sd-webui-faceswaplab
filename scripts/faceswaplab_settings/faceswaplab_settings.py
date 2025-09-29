@@ -1,4 +1,10 @@
-from scripts.faceswaplab_utils.models_utils import get_swap_models
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from faceswaplab_utils.models_utils import get_swap_models
 from modules import script_callbacks, shared
 import gradio as gr
 

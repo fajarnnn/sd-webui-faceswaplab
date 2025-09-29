@@ -1,3 +1,9 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 """
 Code from codeformer https://github.com/sczhou/CodeFormer
 
@@ -45,7 +51,7 @@ import torch
 from torch.hub import download_url_to_file, get_dir
 from .parsenet import ParseNet
 from urllib.parse import urlparse
-from scripts.faceswaplab_globals import FACE_PARSER_DIR
+from faceswaplab_globals import FACE_PARSER_DIR
 
 ROOT_DIR = FACE_PARSER_DIR
 

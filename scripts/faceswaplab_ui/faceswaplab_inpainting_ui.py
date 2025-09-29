@@ -1,7 +1,13 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 from typing import List
 import gradio as gr
 from modules import sd_models, sd_samplers
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
+from faceswaplab_utils.sd_utils import get_sd_option
 
 
 def face_inpainting_ui(id_prefix: str = "faceswaplab") -> List[gr.components.Component]:

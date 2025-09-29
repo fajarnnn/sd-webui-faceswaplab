@@ -1,5 +1,11 @@
-from scripts.configure import check_configuration
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from configure import check_configuration
+from faceswaplab_utils.sd_utils import get_sd_option
 
 check_configuration()
 
@@ -7,16 +13,16 @@ import importlib
 import traceback
 
 from scripts import faceswaplab_globals
-from scripts.faceswaplab_api import faceswaplab_api
-from scripts.faceswaplab_postprocessing import upscaling
-from scripts.faceswaplab_settings import faceswaplab_settings
-from scripts.faceswaplab_swapping import swapper
-from scripts.faceswaplab_ui import faceswaplab_tab, faceswaplab_unit_ui
-from scripts.faceswaplab_utils import faceswaplab_logging, imgutils, models_utils
-from scripts.faceswaplab_utils.models_utils import get_current_swap_model
-from scripts.faceswaplab_utils.typing import *
-from scripts.faceswaplab_utils.ui_utils import dataclasses_from_flat_list
-from scripts.faceswaplab_utils.faceswaplab_logging import logger, save_img_debug
+from faceswaplab_api import faceswaplab_api
+from faceswaplab_postprocessing import upscaling
+from faceswaplab_settings import faceswaplab_settings
+from faceswaplab_swapping import swapper
+from faceswaplab_ui import faceswaplab_tab, faceswaplab_unit_ui
+from faceswaplab_utils import faceswaplab_logging, imgutils, models_utils
+from faceswaplab_utils.models_utils import get_current_swap_model
+from faceswaplab_utils.typing import *
+from faceswaplab_utils.ui_utils import dataclasses_from_flat_list
+from faceswaplab_utils.faceswaplab_logging import logger, save_img_debug
 
 # Reload all the modules when using "apply and restart"
 # This is mainly done for development purposes
@@ -48,12 +54,12 @@ from modules.processing import (
 )
 from modules.shared import opts
 
-from scripts.faceswaplab_globals import VERSION_FLAG
-from scripts.faceswaplab_postprocessing.postprocessing import enhance_image
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+from faceswaplab_globals import VERSION_FLAG
+from faceswaplab_postprocessing.postprocessing import enhance_image
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
-from scripts.faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
+from faceswaplab_ui.faceswaplab_unit_settings import FaceSwapUnitSettings
 
 EXTENSION_PATH = os.path.join("extensions", "sd-webui-faceswaplab")
 

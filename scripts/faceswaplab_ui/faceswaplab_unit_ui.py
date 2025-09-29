@@ -1,9 +1,15 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 from typing import List
-from scripts.faceswaplab_ui.faceswaplab_inpainting_ui import face_inpainting_ui
-from scripts.faceswaplab_swapping.face_checkpoints import get_face_checkpoints
+from faceswaplab_ui.faceswaplab_inpainting_ui import face_inpainting_ui
+from faceswaplab_swapping.face_checkpoints import get_face_checkpoints
 import gradio as gr
 from modules import shared
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
+from faceswaplab_utils.sd_utils import get_sd_option
 
 
 def faceswap_unit_advanced_options(

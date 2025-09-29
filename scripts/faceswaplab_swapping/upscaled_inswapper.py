@@ -1,3 +1,9 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 from typing import Any, Optional, Tuple, Union
 import cv2
 import numpy as np
@@ -6,16 +12,16 @@ from insightface.utils import face_align
 from modules import processing, shared
 from modules.upscaler import UpscalerData
 
-from scripts.faceswaplab_postprocessing import upscaling
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+from faceswaplab_postprocessing import upscaling
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
 )
-from scripts.faceswaplab_swapping.facemask import generate_face_mask
-from scripts.faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
-from scripts.faceswaplab_utils.imgutils import cv2_to_pil, pil_to_cv2
-from scripts.faceswaplab_utils.sd_utils import get_sd_option
-from scripts.faceswaplab_utils.typing import CV2ImgU8, Face
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_swapping.facemask import generate_face_mask
+from faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
+from faceswaplab_utils.imgutils import cv2_to_pil, pil_to_cv2
+from faceswaplab_utils.sd_utils import get_sd_option
+from faceswaplab_utils.typing import CV2ImgU8, Face
+from faceswaplab_utils.faceswaplab_logging import logger
 
 
 def get_upscaler() -> Optional[UpscalerData]:

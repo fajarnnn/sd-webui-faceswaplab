@@ -1,11 +1,17 @@
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
+from faceswaplab_utils.faceswaplab_logging import logger
 from PIL import Image
-from scripts.faceswaplab_postprocessing.postprocessing_options import (
+from faceswaplab_postprocessing.postprocessing_options import (
     PostProcessingOptions,
     InpaintingWhen,
 )
-from scripts.faceswaplab_inpainting.i2i_pp import img2img_diffusion
-from scripts.faceswaplab_postprocessing.upscaling import upscale_img, restore_face
+from faceswaplab_inpainting.i2i_pp import img2img_diffusion
+from faceswaplab_postprocessing.upscaling import upscale_img, restore_face
 import traceback
 
 

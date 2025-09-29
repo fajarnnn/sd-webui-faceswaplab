@@ -1,3 +1,9 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import glob
 import os
 from typing import *
@@ -7,14 +13,14 @@ import torch
 
 import modules.scripts as scripts
 from modules import scripts
-from scripts.faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
-from scripts.faceswaplab_utils.typing import *
-from scripts.faceswaplab_utils import imgutils
-from scripts.faceswaplab_utils.models_utils import get_swap_models
+from faceswaplab_swapping.upcaled_inswapper_options import InswappperOptions
+from faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_utils.typing import *
+from faceswaplab_utils import imgutils
+from faceswaplab_utils.models_utils import get_swap_models
 import traceback
 
-from scripts.faceswaplab_swapping import swapper
+from faceswaplab_swapping import swapper
 from pprint import pformat
 import re
 from client_api import api_utils

@@ -1,8 +1,14 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import cv2
 import numpy as np
 import torch
 from torchvision.transforms.functional import normalize
-from scripts.faceswaplab_swapping.parsing import init_parsing_model
+from faceswaplab_swapping.parsing import init_parsing_model
 from functools import lru_cache
 from typing import Union, List
 from torch import device as torch_device

@@ -1,11 +1,17 @@
+# --- faceswaplab local import shim ---
+import sys, os
+_here = os.path.dirname(__file__)
+if _here not in sys.path: sys.path.insert(0, _here)
+# --- end shim ---
+
 import os
 from tqdm import tqdm
 import urllib.request
-from scripts.faceswaplab_utils.faceswaplab_logging import logger
-from scripts.faceswaplab_globals import *
+from faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_globals import *
 from packaging import version
 import pkg_resources
-from scripts.faceswaplab_utils.models_utils import check_model
+from faceswaplab_utils.models_utils import check_model
 
 ALREADY_DONE = False
 
