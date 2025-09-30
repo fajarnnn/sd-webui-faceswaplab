@@ -19,7 +19,7 @@ from faceswaplab_swapping import face_checkpoints
 from faceswaplab_inpainting.faceswaplab_inpainting import InpaintingOptions
 from client_api import api_utils
 
-
+from modules import shared 
 @dataclass
 class FaceSwapUnitSettings:
     # ORDER of parameters is IMPORTANT. It should match the result of faceswap_unit_ui
@@ -127,36 +127,50 @@ class FaceSwapUnitSettings:
         Reference face is the checkpoint or the source image or the first image in the batch in that order.
         """
         if not hasattr(self, "_reference_face"):
+            ckpt = None
+
+            # --- 1. Prioritas dari UI (dropdown Face checkpoint) ---
             if self.source_face and self.source_face != "None":
+                ckpt = self.source_face
+
+            # --- 2. Kalau kosong → cek dari XYZ Grid (shared.opts) ---
+            elif "faceswaplab_face_checkpoint" in shared.opts.data:
+                xyz_ckpt = shared.opts.data.get("faceswaplab_face_checkpoint", None)
+                if xyz_ckpt and xyz_ckpt != "None":
+                    ckpt = xyz_ckpt
+
+            # --- Kalau ada checkpoint → load langsung jadi reference face ---
+            if ckpt:
                 try:
-                    logger.info(f"loading face {self.source_face}")
-                    face = face_checkpoints.load_face(self.source_face)
-                    self._reference_face = face
+                    logger.info(f"[FaceSwapLab] Loading checkpoint: {ckpt}")
+                    self._reference_face = face_checkpoints.load_face(ckpt)
                 except Exception as e:
-                    logger.error("Failed to load checkpoint  : %s", e)
+                    logger.error("Failed to load checkpoint: %s", e)
                     raise e
+
+            # --- Kalau ga ada checkpoint → fallback ke source image ---
             elif self.source_img is not None:
-                if isinstance(self.source_img, str):  # source_img is a base64 string
-                    if (
-                        "base64," in self.source_img
-                    ):  # check if the base64 string has a data URL scheme
+                if isinstance(self.source_img, str):  # base64 string
+                    import base64, io
+                    from PIL import Image
+                    if "base64," in self.source_img:
                         base64_data = self.source_img.split("base64,")[-1]
                         img_bytes = base64.b64decode(base64_data)
                     else:
-                        # if no data URL scheme, just decode
                         img_bytes = base64.b64decode(self.source_img)
                     self.source_img = Image.open(io.BytesIO(img_bytes))
+
                 source_img = pil_to_cv2(self.source_img)
                 self._reference_face = swapper.get_or_default(
                     swapper.get_faces(source_img), self.reference_face_index, None
                 )
                 if self._reference_face is None:
                     logger.error("Face not found in reference image")
+
             else:
                 self._reference_face = None
 
         if self._reference_face is None:
-            logger.error("You need at least one reference face")
             raise Exception("No reference face found")
 
         return self._reference_face
