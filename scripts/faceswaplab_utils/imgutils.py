@@ -208,8 +208,16 @@ def apply_mask(
             # Versi lama (butuh batch_index)
             img = processing.apply_overlay(img, p.paste_to, batch_index, p.overlay_images)
         except TypeError:
-            # Versi baru (cuma 3 argumen)
-            img = processing.apply_overlay(img, p.paste_to, p.overlay_images)
+            # Versi baru (3 argumen: img, paste_to, overlay)
+            overlay = None
+            if p.overlay_images is not None:
+                if isinstance(p.overlay_images, list):
+                    if batch_index < len(p.overlay_images):
+                        overlay = p.overlay_images[batch_index]
+                else:
+                    overlay = p.overlay_images
+            if overlay is not None:
+                img = processing.apply_overlay(img, p.paste_to, overlay)
     if p.color_corrections is not None and batch_index < len(p.color_corrections):
         img = processing.apply_color_correction(
             p.color_corrections[batch_index], img
