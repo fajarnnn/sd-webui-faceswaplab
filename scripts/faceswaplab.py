@@ -206,7 +206,12 @@ class FaceSwapScript(scripts.Script):
                                 save_img_debug(swp_img, "Before apply mask")
                                 swp_img = imgutils.apply_mask(swp_img, p, batch_index)
                                 save_img_debug(swp_img, "After apply mask")
-
+                                if isinstance(swp_img, tuple):
+                                    try:
+                                        swp_img = swp_img[0]  # biasanya elemen pertama adalah gambar
+                                    except Exception:
+                                        logger.error("swp_img is a tuple and cannot be unpacked; skipping save.")
+                                        swp_img = None
                                 try:
                                     if self.postprocess_options is not None:
                                         swp_img = enhance_image(

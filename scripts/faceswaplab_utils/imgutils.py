@@ -1,22 +1,23 @@
 # --- faceswaplab local import shim ---
-import sys, os
-_here = os.path.dirname(__file__)
-if _here not in sys.path: sys.path.insert(0, _here)
-# --- end shim ---
-
-import io
-from typing import List, Optional, Union, Dict
-from PIL import Image
-import cv2
-import numpy as np
-from math import isqrt, ceil
-import torch
-from modules import processing
-import base64
-from collections import Counter
-from faceswaplab_utils.sd_utils import get_sd_option
-from faceswaplab_utils.typing import BoxCoords, CV2ImgU8, PILImage
 from faceswaplab_utils.faceswaplab_logging import logger
+from faceswaplab_utils.typing import BoxCoords, CV2ImgU8, PILImage
+from faceswaplab_utils.sd_utils import get_sd_option
+from collections import Counter
+import base64
+from modules import processing
+import torch
+from math import isqrt, ceil
+import numpy as np
+import cv2
+from PIL import Image
+from typing import List, Optional, Union, Dict
+import io
+import sys
+import os
+_here = os.path.dirname(__file__)
+if _here not in sys.path:
+    sys.path.insert(0, _here)
+# --- end shim ---
 
 
 def check_against_nsfw(img: PILImage) -> bool:
@@ -87,7 +88,8 @@ def pil_to_torch(pil_images: Union[PILImage, List[PILImage]]) -> torch.Tensor:
     """
     if isinstance(pil_images, list):
         numpy_images = [np.array(image) for image in pil_images]
-        torch_images = torch.from_numpy(np.stack(numpy_images)).permute(0, 3, 1, 2)
+        torch_images = torch.from_numpy(
+            np.stack(numpy_images)).permute(0, 3, 1, 2)
         return torch_images
 
     numpy_image = np.array(pil_images)
@@ -193,18 +195,25 @@ def apply_mask(
             if overlays is None or batch_index >= len(overlays):
                 return img
             overlay: PILImage = overlays[batch_index]
-            logger.debug("Overlay size %s, Image size %s", overlay.size, img.size)
+            logger.debug("Overlay size %s, Image size %s",
+                         overlay.size, img.size)
             if overlay.size != img.size:
-                overlay = overlay.resize((img.size), resample=Image.Resampling.LANCZOS)
+                overlay = overlay.resize(
+                    (img.size), resample=Image.Resampling.LANCZOS)
             img = img.copy()
             img.paste(overlay, (0, 0), overlay)
             return img
 
-        img = processing.apply_overlay(img, p.paste_to, batch_index, p.overlay_images)
-        if p.color_corrections is not None and batch_index < len(p.color_corrections):
-            img = processing.apply_color_correction(
-                p.color_corrections[batch_index], img
-            )
+        try:
+            # Versi lama (butuh batch_index)
+            img = processing.apply_overlay(img, p.paste_to, batch_index, p.overlay_images)
+        except TypeError:
+            # Versi baru (cuma 3 argumen)
+            img = processing.apply_overlay(img, p.paste_to, p.overlay_images)
+    if p.color_corrections is not None and batch_index < len(p.color_corrections):
+        img = processing.apply_color_correction(
+            p.color_corrections[batch_index], img
+        )
     return img
 
 
