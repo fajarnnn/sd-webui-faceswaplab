@@ -73,21 +73,36 @@ def get_swap_models() -> List[str]:
 
 
 def get_current_swap_model() -> str:
-    model = opts.data.get("faceswaplab_model", None)  # type: ignore
+    model = opts.data.get("faceswaplab_model", None)
     if model is None:
         models = get_swap_models()
         model = models[0] if len(models) else None
-    logger.info("Try to use model : %s", model)
-    try:
-        if not model or not os.path.isfile(model):  # type: ignore
-            logger.error("The model %s cannot be found or loaded", model)
-            raise FileNotFoundError(
-                "No faceswap model found. Please add it to the faceswaplab directory. Ensure the model is in the proper directory (<sdwebui>/models/faceswaplab/inswapper_128.onnx)"
-            )
-    except:
-        raise FileNotFoundError(
-            "No faceswap model found. Please add it to the faceswaplab directory. Ensure the model is in the proper directory (<sdwebui>/models/faceswaplab/inswapper_128.onnx)"
-        )
 
-    assert model is not None
-    return model
+    logger.info("Try to use model : %s", model)
+
+    # 🧩 FIX: import 'paths' kalau ada, kalau gak fallback ke Forge path
+    try:
+        from modules import paths
+        models_root = getattr(paths, "models_path", "/content/stable-diffusion-webui-forge/models")
+    except Exception:
+        models_root = "/content/stable-diffusion-webui-forge/models"
+
+    # 🔍 cek di beberapa lokasi
+    possible_paths = [
+        model,
+        os.path.join(models_root, "faceswaplab", "inswapper_128.onnx"),
+        "/content/stable-diffusion-webui/models/faceswaplab/inswapper_128.onnx",  # legacy A1111 path
+    ]
+
+    for path in possible_paths:
+        if path and os.path.isfile(path):
+            logger.info("✅ Found FaceSwap model at %s", path)
+            return path
+
+    # ❌ kalau tetap gak ketemu
+    logger.error("No FaceSwap model found in any known directory.")
+    raise FileNotFoundError(
+        "No faceswap model found. Please add it to one of these directories:\n"
+        f" - {os.path.join(models_root, 'faceswaplab', 'inswapper_128.onnx')}\n"
+        " - /content/stable-diffusion-webui/models/faceswaplab/inswapper_128.onnx"
+    )
