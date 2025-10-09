@@ -83,7 +83,7 @@ class FaceSwapScript(scripts.Script):
 
     @property
     def units_count(self) -> int:
-        return get_sd_option("faceswaplab_units_count", 3)
+        return get_sd_option("faceswaplab_units_count", 7)
 
     @property
     def enabled(self) -> bool:
