@@ -294,4 +294,6 @@ Otherwise, read the [doc](https://glucauze.github.io/sd-webui-faceswaplab/doc/) 
 
     # If changed, you need to change FaceSwapUnitSettings accordingly
     # ORDER of parameters is IMPORTANT. It should match the result of FaceSwapUnitSettings
+    print(f"DEBUG Tab {unit_num} -> target_faces_index default = {target_faces_index.value}")
+
     return gradio_components
