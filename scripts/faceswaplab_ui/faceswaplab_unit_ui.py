@@ -3,7 +3,7 @@ import sys, os
 _here = os.path.dirname(__file__)
 if _here not in sys.path: sys.path.insert(0, _here)
 # --- end shim ---
-
+import random
 from typing import List
 from faceswaplab_ui.faceswaplab_inpainting_ui import face_inpainting_ui
 from faceswaplab_swapping.face_checkpoints import get_face_checkpoints
@@ -11,7 +11,7 @@ import gradio as gr
 from modules import shared
 from faceswaplab_utils.sd_utils import get_sd_option
 
-
+face_list = [f for f in get_face_checkpoints() if f.lower() != "none"]
 def faceswap_unit_advanced_options(
     is_img2img: bool, unit_num: int = 1, id_prefix: str = "faceswaplab_"
 ) -> List[gr.components.Component]:
@@ -129,11 +129,29 @@ def faceswap_unit_ui(
                 """Face checkpoint built with the checkpoint builder in tools. Will overwrite reference image."""
             )
             with gr.Row():
+                # ambil semua checkpoint, buang 'None'
+                
+
+                # bikin random stabil per tab, tapi beda untuk tiap unit_num
+               # pakai SystemRandom biar tiap tab RNG-nya independen
+                # rng = random.SystemRandom()
+
+                if unit_num == 1:
+                    default_face = "FaceGal.safetensors"
+                else:
+                    default_face = random.choice(face_list) if face_list else None
+
+                # print(f"[INIT] Tab {unit_num} default face -> {default_face}")
+                if default_face in face_list:
+                    face_list.remove(default_face)
                 face = gr.Dropdown(
-                    choices=get_face_checkpoints(),
-                    label="Face Checkpoint (precedence over reference face)",
+                    choices=get_face_checkpoints() ,
+                    value=default_face,
+                    label=f"Face Checkpoint face{unit_num} (precedence over reference face)",
                     elem_id=f"{id_prefix}_face{unit_num}_face_checkpoint",
+                    key=f"{id_prefix}_face{unit_num}_face_checkpoint_key"
                 )
+
                 refresh = gr.Button(
                     value="↻",
                     variant="tool",
@@ -141,11 +159,11 @@ def faceswap_unit_ui(
                 )
 
                 def refresh_fn(selected: str):
-                    return gr.Dropdown.update(
-                        value=selected, choices=get_face_checkpoints()
-                    )
+                    new_faces = [f for f in get_face_checkpoints() if f.lower() != "none"]
+                    return gr.Dropdown.update(value=selected, choices=new_faces)
 
                 refresh.click(fn=refresh_fn, inputs=face, outputs=face)
+
 
             with gr.Row():
                 enable = gr.Checkbox(
@@ -179,11 +197,13 @@ def faceswap_unit_ui(
                     elem_id=f"{id_prefix}_face{unit_num}_sort_by_size",
                 )
             target_faces_index = gr.Textbox(
-                value=f"{unit_num-1}",
+                value=str(unit_num - 1),
                 placeholder="Which face to swap (comma separated), start from 0 (by gender if same_gender is enabled)",
-                label="Target face : Comma separated face number(s)",
+                label=f"Target face {unit_num} : Comma separated face number(s)",  # unik
                 elem_id=f"{id_prefix}_face{unit_num}_target_faces_index",
             )
+            setattr(target_faces_index, "do_not_save_to_config", True)
+
             gr.Markdown(
                 """The following will only affect reference face image (and is not affected by sort by size) :"""
             )
@@ -294,6 +314,6 @@ Otherwise, read the [doc](https://glucauze.github.io/sd-webui-faceswaplab/doc/) 
 
     # If changed, you need to change FaceSwapUnitSettings accordingly
     # ORDER of parameters is IMPORTANT. It should match the result of FaceSwapUnitSettings
-    print(f"DEBUG Tab {unit_num} -> target_faces_index default = {target_faces_index.value}")
-
+    # print(f"DEBUG Tab {unit_num} -> target_faces_index default = {target_faces_index.value}")
+    # print(get_face_checkpoints())
     return gradio_components
