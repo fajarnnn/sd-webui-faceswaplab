@@ -15,10 +15,8 @@ face_list = None
 def ensure_face_list_initialized():
     global face_list
     if face_list is None or len(face_list) == 0:
-        print("[DEBUG] Re-loading faces from disk...")
+        # print("[DEBUG] Re-loading faces from disk...")
         face_list = [f for f in get_face_checkpoints() if f.lower() != "none"]
-    else:
-        print(f"[DEBUG] Using existing global face list ({len(face_list)} faces)")
     return face_list
 
 # print(f"[FACESGLOB] Tab {face_list}")
@@ -164,9 +162,9 @@ def faceswap_unit_ui(
                 )
                 if default_face in face_list:
                     face_list.remove(default_face)
-                face_list2 = [f for f in get_face_checkpoints() if f.lower() != "none"]
-                print(f"[FACES] Tab {face_list2}")
-                print(f"[FACES] Tab {face_list}")
+                # face_list2 = [f for f in get_face_checkpoints() if f.lower() != "none"]
+                # print(f"[FACES] Tab {face_list2}")
+                # print(f"[FACES] Tab {face_list}")
                 refresh = gr.Button(
                     value="↻",
                     variant="tool",
