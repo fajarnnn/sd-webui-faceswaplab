@@ -11,7 +11,17 @@ import gradio as gr
 from modules import shared
 from faceswaplab_utils.sd_utils import get_sd_option
 
-face_list = [f for f in get_face_checkpoints() if f.lower() != "none"]
+face_list = None
+def ensure_face_list_initialized():
+    global face_list
+    if face_list is None or len(face_list) == 0:
+        print("[DEBUG] Re-loading faces from disk...")
+        face_list = [f for f in get_face_checkpoints() if f.lower() != "none"]
+    else:
+        print(f"[DEBUG] Using existing global face list ({len(face_list)} faces)")
+    return face_list
+
+# print(f"[FACESGLOB] Tab {face_list}")
 def faceswap_unit_advanced_options(
     is_img2img: bool, unit_num: int = 1, id_prefix: str = "faceswaplab_"
 ) -> List[gr.components.Component]:
@@ -106,6 +116,7 @@ def faceswap_unit_advanced_options(
 def faceswap_unit_ui(
     is_img2img: bool, unit_num: int = 1, id_prefix: str = "faceswaplab"
 ) -> List[gr.components.Component]:
+    ensure_face_list_initialized()
     with gr.Tab(f"Face {unit_num}"):
         with gr.Column():
             gr.Markdown(
@@ -142,8 +153,8 @@ def faceswap_unit_ui(
                     default_face = random.choice(face_list) if face_list else None
 
                 # print(f"[INIT] Tab {unit_num} default face -> {default_face}")
-                if default_face in face_list:
-                    face_list.remove(default_face)
+                
+                print(f"[INIT] Tab {unit_num} default face -> {default_face}")
                 face = gr.Dropdown(
                     choices=get_face_checkpoints() ,
                     value=default_face,
@@ -151,7 +162,11 @@ def faceswap_unit_ui(
                     elem_id=f"{id_prefix}_face{unit_num}_face_checkpoint",
                     key=f"{id_prefix}_face{unit_num}_face_checkpoint_key"
                 )
-
+                if default_face in face_list:
+                    face_list.remove(default_face)
+                face_list2 = [f for f in get_face_checkpoints() if f.lower() != "none"]
+                print(f"[FACES] Tab {face_list2}")
+                print(f"[FACES] Tab {face_list}")
                 refresh = gr.Button(
                     value="↻",
                     variant="tool",
@@ -163,7 +178,7 @@ def faceswap_unit_ui(
                     return gr.Dropdown.update(value=selected, choices=new_faces)
 
                 refresh.click(fn=refresh_fn, inputs=face, outputs=face)
-
+                setattr(face, "do_not_save_to_config", True)
 
             with gr.Row():
                 enable = gr.Checkbox(
